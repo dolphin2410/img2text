@@ -60,6 +60,7 @@ translation = {
     "RightArrow": ">",
     "Sharp": "#",
     "Slash": "/",
+    "Space": " ",
     "Star": "*",
     "Tilde": "~",
     "Won": "\\"
@@ -73,12 +74,24 @@ for k, v in translation.items():
 coverages = [(k, v) for k, v in sorted(coverages.items(), key = lambda x: x[1])] # This ambiguous typing...
 
 # Main Program
-image = cv2.imread("image.png", cv2.IMREAD_GRAYSCALE)
-image = cv2.resize(image, (900, 225))
+images = cv2.VideoCapture("video.mp4")
 
 with open("result.txt", "w") as file:
-    for line in image:
-        for col in line:
-            coverage_index = int((255 - col) / 255 * len(coverages))
-            file.write(coverages[coverage_index][0])
-        file.write("\n")
+    while True:
+        ret, image = images.read()
+        
+        if not ret:
+            break
+        
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        image = cv2.resize(image, (300, 60))
+
+        for line in image:
+            for col in line:
+                coverage_index = int((255 - col) / 255 * (len(coverages) - 1))
+                file.write(coverages[coverage_index][0])
+            file.write("\n")
+        file.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+
+images.release()
+cv2.destroyAllWindows()
